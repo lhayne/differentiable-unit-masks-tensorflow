@@ -1,4 +1,5 @@
 import tensorflow as tf
+import numpy as np
 import math
 
 class MeanRegularizer(tf.keras.regularizers.Regularizer):
@@ -156,7 +157,17 @@ def IOU(mask_0,mask_1,threshold=0.5):
     """
     Intersection over union for two 1D mask arrays based on a threshold.
     """
-    mask_0_indexs_kept = (mask_0 > threshold).nonzero()[0]
-    mask_1_indexs_kept = (mask_1 > threshold).nonzero()[0]
+    mask_0_indexs_kept = np.flatnonzero(mask_0 > threshold)
+    mask_1_indexs_kept = np.flatnonzero(mask_1 > threshold)
     intersection = np.intersect1d(mask_0_indexs_kept,mask_1_indexs_kept)
-    return len(intersection)/len(mask_0)
+    return len(intersection)/(len(mask_0_indexs_kept) + len(mask_1_indexs_kept))
+
+
+def IOB(mask_0,mask_1,threshold=0.0):
+    """
+    Intersection over length of B for two 1D mask arrays based on a threshold.
+    """
+    mask_0_indexs_kept = np.flatnonzero(mask_0 > threshold)
+    mask_1_indexs_kept = np.flatnonzero(mask_1 > threshold)
+    intersection = np.intersect1d(mask_0_indexs_kept,mask_1_indexs_kept)
+    return len(intersection)/len(mask_1_indexs_kept)
