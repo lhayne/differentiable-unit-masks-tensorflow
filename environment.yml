@@ -1,0 +1,8 @@
+name: dum
+dependencies:
+- python=3
+- jupyter
+- tensorflow
+- matplotlib
+- numpy 
+- pandas

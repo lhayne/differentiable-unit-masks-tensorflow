@@ -1,4 +1,4 @@
-import mask_utils
+from util import masking
 import numpy as np
 import tensorflow as tf
 import pandas as pd
@@ -122,7 +122,7 @@ def main():
 
                     model = tf.keras.models.load_model('../data/models/model_width_'+str(width)+'_iteration_'+str(iteration))
 
-                    gumbel_model = mask_utils.add_masks(model,mask_type='gumbel',
+                    gumbel_model = masking.add_masks(model,mask_type='gumbel',
                                                         layer_kwargs={'alpha':alpha,'regularizer':'SumOfSigmoidsRegularizer',
                                                                       'num_mask_samples':8})
 
