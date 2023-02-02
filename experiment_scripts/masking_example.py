@@ -45,7 +45,7 @@ def main():
 
     # Build and compile model
     module_model.build((None,784))
-    module_model.compile(loss="categorical_crossentropy", optimizer="adam")
+    module_model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=['accuracy'])
 
     # Insert weights from previous model
     module_model.get_layer('dense_300').set_weights(model.get_layer('dense_300').get_weights())
@@ -62,7 +62,7 @@ def main():
     class_1_weight = (1 / np.sum(binary_y_train[:,1])) * (len(binary_y_train) / 2.0)
 
     # Fit the module model
-    module_model.fit(x_train,binary_y_train,validation_data=(x_test,binary_y_test),epochs=10,
+    module_model.fit(x_train,binary_y_train,validation_data=(x_test,binary_y_test),epochs=50,
                 class_weight={0:class_0_weight,1:class_1_weight})
 
     print('Accuracy')

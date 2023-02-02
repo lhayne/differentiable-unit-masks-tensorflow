@@ -5,6 +5,13 @@ This repository implements differientiable units masks in tensorflow. Differenti
 
 For instance, differentiable unit masks can be applied to networks trained on MNIST to discover subnetworks capable of identifying only one digit. They can also be applied to more complex networks trained on more complex tasks to find simpler networks. For instance, by applying masks to networks trained on ImageNet, we can find subnetworks responsible for detecting specific shapes or patterns.
 
+## Experiments
+This repository contains experimental data of modules extracted from convolutional networks trained on MNIST of various sizes. The top row of the figure below shows the intersection over union of class modules extracted from networks with four different widths. The second row shows the number of parameters retained in each layers' modules. And the third row shows the number of units (features) retained. The legend indicates that four networks were trained with varying widths $N$ (2,4,6,8) which represent that the network contains $2^N$ filters (convolutional layers) or number of features (fully connected layers) in each layer.
+
+![Intersection over union figure](img/intersection_over_union_modules.png "Class modules share fewer features as the size of the network increases")
+
+This figure indicates that as the size of the network grows in width (number of channels in convolutional layers) class modules share fewer and fewer features across all layers in the network.
+
 ## Setup
 To set up your environment and conduct experiments run
 ```
@@ -13,7 +20,7 @@ conda activate dum
 conda develop src
 ```
 
-## Applying masks
+## Applying masks to MNIST
 Here, we'll run through a simple example for training differentiable weight masks on MNIST. First, we'll train a simple 2-layer MLP model on the full MNIST dataset to classify digits into one of 10 classes. Then, we'll apply differentiable unit mask layers to the model after each of the two layers. The weights of the original model will be frozen, but we'll optimize the mask weights to keep only the units necessary for detecting zeros in the input.
 
 First, load and preprocess the MNIST data.
@@ -71,7 +78,7 @@ We also need to copy over the weights from the previous model.
 ```
 # Build and compile model
 module_model.build((None,784))
-module_model.compile(loss="categorical_crossentropy", optimizer="adam")
+module_model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=['accuracy'])
 
 module_model.get_layer('dense_300').set_weights(model.get_layer('dense_300').get_weights())
 module_model.get_layer('dense_100').set_weights(model.get_layer('dense_100').get_weights())
@@ -99,4 +106,4 @@ module_model.fit(x_train,binary_y_train,validation_data=(x_test,binary_y_test),e
               class_weight={0:class_0_weight,1:class_1_weight})
 ```
 
-The accuracy of the module is 98% and only contains 122 units.
+The accuracy of the module is 99% and only contains about 100 units, a fourth as many as the original network.
