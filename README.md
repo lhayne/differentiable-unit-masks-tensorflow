@@ -1,4 +1,4 @@
-# differentiable-unit-masks-tensorflow
+# Differentiable Unit Masks for Tensorflow
 Differentiable unit masks inspired by https://arxiv.org/pdf/2010.02066.pdf
 
 This repository implements differientiable units masks in tensorflow. Differentiable unit masks are binary masks applied to units a neural network. These masks can be applied to units in a pre-trained (full) network and optimized via gradient descent to ''discover'' (sub) networks that perform subtasks of the problem the full network was trained to solve. 
